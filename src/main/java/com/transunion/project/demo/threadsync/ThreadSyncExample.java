@@ -34,7 +34,7 @@ public class ThreadSyncExample {
             System.out.println("T3 finished");
             return "T3 done";
         };
-        
+        //IN master
         
 
         Callable<String> task4 = () -> {

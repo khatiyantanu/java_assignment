@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EmployeeTest {
 
-	// 1️⃣ Without equals & hashCode
+	// Case 1: Without hashCode or equals
     @Test
-    void testWithoutEqualsAndHashCode() {
+    void testWithoutHashCodeOrEquals() {
         Employee e1 = new Employee(1, "John", "Doe");
         Employee e2 = new Employee(1, "John", "Doe");
 
@@ -23,96 +23,51 @@ public class EmployeeTest {
         set.add(e1);
         set.add(e2);
 
-        // Two different objects → treated as unique
-        assertEquals(2, set.size(), "HashSet stores duplicates if equals/hashCode not overridden");
+        // Different objects, HashSet treats them as unique
+        assertEquals(2, set.size(), "HashSet allows duplicates if neither equals nor hashCode is overridden");
     }
 
-    // 2️⃣ Only hashCode
-    static class EmployeeWithHashCode extends Employee {
-        public EmployeeWithHashCode(int id, String f, String l) {
-            super(id, f, l);
-        }
-        @Override
-        public int hashCode() {
-            return getId();
-        }
-    }
-
+    // Case 2: Only hashCode
     @Test
     void testWithOnlyHashCode() {
-        Employee e1 = new EmployeeWithHashCode(1, "John", "Doe");
-        Employee e2 = new EmployeeWithHashCode(1, "John", "Doe");
+        Employee e1 = new Employee.WithHashCode(1, "John", "Doe");
+        Employee e2 = new Employee.WithHashCode(1, "John", "Doe");
 
         Set<Employee> set = new HashSet<>();
         set.add(e1);
         set.add(e2);
 
-        // Hash codes same, but equals not overridden → still treated as different
-        assertEquals(2, set.size(), "HashSet stores duplicates when only hashCode is implemented");
+        // Same hash but equals not overridden, still treated as different
+        assertEquals(2, set.size(), "HashSet stores both when only hashCode is implemented");
     }
 
-    // 3️⃣ Only equals
-    static class EmployeeWithEquals extends Employee {
-        public EmployeeWithEquals(int id, String f, String l) {
-            super(id, f, l);
-        }
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (!(obj instanceof EmployeeWithEquals)) return false;
-            EmployeeWithEquals other = (EmployeeWithEquals) obj;
-            return getId() == other.getId()
-                    && getFirstName().equals(other.getFirstName())
-                    && getLastName().equals(other.getLastName());
-        }
-    }
-
+    // Case 3: Only equals
     @Test
     void testWithOnlyEquals() {
-        Employee e1 = new EmployeeWithEquals(1, "John", "Doe");
-        Employee e2 = new EmployeeWithEquals(1, "John", "Doe");
+        Employee e1 = new Employee.WithEquals(1, "John", "Doe");
+        Employee e2 = new Employee.WithEquals(1, "John", "Doe");
 
         Set<Employee> set = new HashSet<>();
         set.add(e1);
         set.add(e2);
 
-        // equals says same, but hashCode differs → still both stored
-        assertEquals(2, set.size(), "HashSet stores duplicates when only equals is implemented");
+        // equals says objects are equal, but different hash codes, both stored
+        assertEquals(2, set.size(), "HashSet stores both when only equals is implemented");
     }
 
-    // 4️⃣ Both hashCode & equals
-    static class EmployeeWithHashCodeAndEquals extends Employee {
-        public EmployeeWithHashCodeAndEquals(int id, String f, String l) {
-            super(id, f, l);
-        }
-        @Override
-        public int hashCode() {
-            return getId();
-        }
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (!(obj instanceof EmployeeWithHashCodeAndEquals)) return false;
-            EmployeeWithHashCodeAndEquals other = (EmployeeWithHashCodeAndEquals) obj;
-            return getId() == other.getId()
-                    && getFirstName().equals(other.getFirstName())
-                    && getLastName().equals(other.getLastName());
-        }
-    }
-
+    // Case 4: Both hashCode & equals
     @Test
     void testWithHashCodeAndEquals() {
-        Employee e1 = new EmployeeWithHashCodeAndEquals(1, "John", "Doe");
-        Employee e2 = new EmployeeWithHashCodeAndEquals(1, "John", "Doe");
+        Employee e1 = new Employee.WithHashCodeAndEquals(1, "John", "Doe");
+        Employee e2 = new Employee.WithHashCodeAndEquals(1, "John", "Doe");
 
         Set<Employee> set = new HashSet<>();
         set.add(e1);
         set.add(e2);
 
-        // Both hashCode and equals consistent → duplicate prevented
-        assertEquals(1, set.size(), "HashSet removes duplicates when equals & hashCode are both implemented");
+        // Both hashCode and equals consistent, duplicates prevented
+        assertEquals(1, set.size(), "HashSet prevents duplicates when both equals and hashCode are implemented");
     }
-	
 	
 	
 //	@Test

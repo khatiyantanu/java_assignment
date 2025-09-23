@@ -17,7 +17,7 @@ public class TryWithResourceTest {
             res.doWork();
         }
 
-        // ✅ Verify resource was closed automatically
+        //Verify resource was closed automatically
         assertTrue(resource.isClosed(), "Resource should be closed after try-with-resources");
     }
 }

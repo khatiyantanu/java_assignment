@@ -46,7 +46,7 @@ public class ThreadSyncExample {
 
         List<Callable<String>> tasks = Arrays.asList(task1, task2, task3, task4);
 
-        // invokeAll waits until all tasks complete
+        // invokeAll waits until all tasks complete, blocks until they all finish, T5 cannot run until all tasks are done
         executor.invokeAll(tasks);
 
         // Shutdown executor for T1..T4
